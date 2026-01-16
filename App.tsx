@@ -4,43 +4,51 @@ import Navbar from './components/Navbar';
 import DestinationCard from './components/DestinationCard';
 import AIPlanner from './components/AIPlanner';
 import { DESTINATIONS } from './constants';
-import { Destination } from './types';
+import { Destination, Language } from './types';
+import { UI_STRINGS } from './translations';
+
+const WHATSAPP_NUMBER = "6282280307626"; 
 
 const App: React.FC = () => {
+  const [lang, setLang] = useState<Language>('id');
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [selectedDest, setSelectedDest] = useState<Destination | null>(null);
+
+  const t = (key: string) => UI_STRINGS[key]?.[lang] || key;
 
   const filteredDestinations = useMemo(() => {
     if (activeCategory === 'all') return DESTINATIONS;
     return DESTINATIONS.filter(d => d.category === activeCategory);
   }, [activeCategory]);
 
+  const handleInquiry = (dest: Destination) => {
+    const message = lang === 'id' 
+      ? `Halo JelajahPapua, saya tertarik dengan paket *${dest.name}* di *${dest.region}*.`
+      : `Hi JelajahPapua, I am interested in the *${dest.name}* package in *${dest.region}*.`;
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
+  };
+
   return (
     <div className="min-h-screen">
-      <Navbar />
+      <Navbar currentLang={lang} onLangChange={setLang} />
 
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 hero-vignette"></div>
         <div className="relative z-10 text-center px-8 reveal">
-          <span className="text-emerald-300 font-bold uppercase tracking-[0.5em] text-[10px] mb-6 block">The Last Paradise on Earth</span>
+          <span className="text-emerald-300 font-bold uppercase tracking-[0.5em] text-[10px] mb-6 block">{t('hero_subtitle')}</span>
           <h1 className="text-7xl md:text-9xl font-black text-white mb-8 tracking-tighter leading-none">
             JELAJAH<br />PAPUA
           </h1>
           <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed mb-12">
-            Dari pengamatan Cendrawasih di hutan rimba hingga island hopping ala backpacker. Temukan sisi Papua yang belum pernah Anda bayangkan.
+            {t('hero_desc')}
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
             <button 
               onClick={() => document.getElementById('explore')?.scrollIntoView({ behavior: 'smooth' })}
               className="bg-white text-emerald-950 px-10 py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-emerald-50 transition-all shadow-2xl active:scale-95"
             >
-              Mulai Eksplorasi
-            </button>
-            <button 
-              onClick={() => document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-emerald-800/30 backdrop-blur-md border border-white/20 text-white px-10 py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-white/10 transition-all active:scale-95"
-            >
-              Coba AI Planner
+              {t('btn_explore')}
             </button>
           </div>
         </div>
@@ -49,81 +57,34 @@ const App: React.FC = () => {
       <section id="explore" className="py-32 px-8 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8 reveal">
           <div className="max-w-xl">
-            <h2 className="text-5xl font-extrabold text-emerald-950 mb-6 tracking-tight">Destinasi Pilihan</h2>
-            <p className="text-emerald-900/60 text-lg font-medium leading-relaxed">
-              Kami kurasi destinasi terbaik di Papua untuk pecinta alam, pengamat burung, dan petualang gaya ransel.
-            </p>
+            <h2 className="text-5xl font-extrabold text-emerald-950 mb-6 tracking-tight">{t('section_title_dest')}</h2>
           </div>
-          
           <div className="flex flex-wrap gap-2">
-            {['all', 'cendrawasih', 'island-hopping', 'camping', 'lake-sentani'].map((cat) => (
+            {['all', 'cendrawasih', 'island-hopping', 'camping'].map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 className={`px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${
-                  activeCategory === cat 
-                    ? 'bg-emerald-950 text-white shadow-xl' 
-                    : 'bg-emerald-50 text-emerald-900/40 hover:text-emerald-900'
+                  activeCategory === cat ? 'bg-emerald-950 text-white' : 'bg-emerald-50 text-emerald-900/40 hover:text-emerald-900'
                 }`}
               >
-                {cat === 'all' ? 'Semua' : cat.replace('-', ' ')}
+                {cat === 'all' ? (lang === 'id' ? 'Semua' : 'All') : cat.replace('-', ' ')}
               </button>
             ))}
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {filteredDestinations.map((dest, idx) => (
-            <div key={dest.id} className="reveal" style={{ animationDelay: `${idx * 0.1}s` }}>
-              <DestinationCard destination={dest} onOpenDetail={setSelectedDest} />
+          {filteredDestinations.map((dest) => (
+            <div key={dest.id}>
+              {/* Note: DestinationCard needs translation prop too, or access lang */}
+              <DestinationCard destination={dest} onOpenDetail={setSelectedDest} lang={lang} />
             </div>
           ))}
         </div>
       </section>
 
-      <AIPlanner />
-
-      {/* Bagian Panduan Baru */}
-      <section id="tips" className="py-32 bg-white px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20 reveal">
-            <span className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-4 block">Essential Knowledge</span>
-            <h2 className="text-5xl font-black text-emerald-950 tracking-tighter">Panduan Penjelajah</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="reveal" style={{ animationDelay: '0.1s' }}>
-              <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-700 mb-6 font-bold">01</div>
-              <h4 className="text-xl font-black text-emerald-950 mb-4">Kesehatan & Keamanan</h4>
-              <p className="text-emerald-900/60 leading-relaxed">Gunakan profilaksis malaria (Malarone/Doxycycline) jika masuk ke pedalaman. Selalu gunakan pemandu lokal bersertifikat untuk trekking hutan primer.</p>
-            </div>
-            <div className="reveal" style={{ animationDelay: '0.2s' }}>
-              <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-700 mb-6 font-bold">02</div>
-              <h4 className="text-xl font-black text-emerald-950 mb-4">Etika Budaya</h4>
-              <p className="text-emerald-900/60 leading-relaxed">Hargai tanah adat. Selalu minta izin (permisi) sebelum memotret orang atau memasuki area sakral. Sapaan "Amolongo" atau "Kinaonak" akan sangat dihargai.</p>
-            </div>
-            <div className="reveal" style={{ animationDelay: '0.3s' }}>
-              <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-700 mb-6 font-bold">03</div>
-              <h4 className="text-xl font-black text-emerald-950 mb-4">Leave No Trace</h4>
-              <p className="text-emerald-900/60 leading-relaxed">Papua adalah benteng terakhir biodiversitas. Bawa kembali sampah plastik Anda ke kota. Jangan memberi makan satwa liar agar insting mereka tetap terjaga.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="bg-white py-20 border-t border-emerald-50">
-        <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-12">
-          <div className="text-center md:text-left">
-            <h4 className="text-2xl font-black text-emerald-950 mb-2">JelajahPapua</h4>
-            <p className="text-emerald-900/40 font-medium">© 2025 Petualangan Alam Papua.</p>
-          </div>
-          <div className="flex space-x-12 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-900/60">
-            <a href="#" className="hover:text-emerald-950">Instagram</a>
-            <a href="#" className="hover:text-emerald-950">Facebook</a>
-            <a href="#" className="hover:text-emerald-950">YouTube</a>
-          </div>
-        </div>
-      </footer>
+      <AIPlanner language={lang} />
 
       {selectedDest && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
@@ -131,35 +92,25 @@ const App: React.FC = () => {
           <div className="relative bg-white w-full max-w-4xl rounded-[3rem] overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
             <div className="md:w-1/2 h-80 md:h-auto relative">
               <img src={selectedDest.imageUrl} className="w-full h-full object-cover" alt={selectedDest.name} />
-              <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/50 to-transparent"></div>
             </div>
             <div className="md:w-1/2 p-12 overflow-y-auto">
-              <button 
-                onClick={() => setSelectedDest(null)}
-                className="absolute top-8 right-8 w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-950 hover:bg-emerald-100 transition-colors"
-              >
-                ✕
-              </button>
-              <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block">{selectedDest.region}</span>
-              <h3 className="text-4xl font-black text-emerald-950 mb-6 tracking-tight leading-none">{selectedDest.name}</h3>
-              <p className="text-emerald-900/70 text-lg leading-relaxed mb-8 font-medium">{selectedDest.description}</p>
+              <button onClick={() => setSelectedDest(null)} className="absolute top-8 right-8 w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center">✕</button>
+              <h3 className="text-4xl font-black text-emerald-950 mb-6">{selectedDest.name}</h3>
+              <p className="text-emerald-900/70 text-lg mb-8">{selectedDest.description[lang]}</p>
               
               <div className="grid grid-cols-2 gap-6 mb-10">
                 <div className="bg-emerald-50 p-6 rounded-2xl">
-                  <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">Kesulitan</span>
-                  <span className="text-emerald-950 font-bold">{selectedDest.difficulty}</span>
+                  <span className="text-[10px] font-bold uppercase text-emerald-400 block mb-1">{t('difficulty_label')}</span>
+                  <span className="text-emerald-950 font-bold">{selectedDest.difficulty[lang]}</span>
                 </div>
                 <div className="bg-emerald-50 p-6 rounded-2xl">
-                  <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">Estimasi Biaya</span>
+                  <span className="text-[10px] font-bold uppercase text-emerald-400 block mb-1">{t('price_label')}</span>
                   <span className="text-emerald-950 font-bold">{selectedDest.priceRange}</span>
                 </div>
               </div>
               
-              <button 
-                onClick={() => setSelectedDest(null)}
-                className="w-full bg-emerald-950 text-white py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-emerald-900 transition-all shadow-xl shadow-emerald-950/10"
-              >
-                Tanya Paket Tour
+              <button onClick={() => handleInquiry(selectedDest)} className="w-full bg-emerald-950 text-white py-5 rounded-2xl font-bold uppercase">
+                {t('btn_inquiry')}
               </button>
             </div>
           </div>
