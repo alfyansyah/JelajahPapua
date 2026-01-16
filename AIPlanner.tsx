@@ -123,7 +123,7 @@ const AIPlanner: React.FC = () => {
                 </div>
 
                 <div className="space-y-12">
-                  {result.dailyPlan.map((day) => (
+                  {result.dailyPlan.map((day: any) => (
                     <div key={day.day} className="flex gap-10 group">
                       <div className="flex-shrink-0">
                         <div className="w-16 h-16 rounded-2xl bg-emerald-950 text-white flex flex-col items-center justify-center group-hover:bg-emerald-400 group-hover:text-emerald-950 transition-colors duration-500">
