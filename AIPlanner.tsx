@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { generateItinerary } from '../services/geminiService.ts';
-import { ItineraryResponse } from '../types.ts';
+import { generateItinerary } from '../services/geminiService';
+import { ItineraryResponse } from '../types';
 
 const AIPlanner: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -58,10 +58,10 @@ const AIPlanner: React.FC = () => {
                   onChange={(e) => setInterest(e.target.value)}
                   className="w-full bg-emerald-900/50 border border-emerald-800 text-white px-6 py-4 rounded-2xl outline-none focus:border-emerald-400 transition-all font-bold text-sm"
                 >
-                  <option className="bg-emerald-950">Eksplorasi Hutan Primer & Birding</option>
-                  <option className="bg-emerald-950">Pendakian Puncak Tinggi (Hiking)</option>
-                  <option className="bg-emerald-950">Survival Danau & Sungai</option>
-                  <option className="bg-emerald-950">Island Trekking & Snorkeling</option>
+                  <option value="Eksplorasi Hutan Primer & Birding" className="bg-emerald-950">Eksplorasi Hutan Primer & Birding</option>
+                  <option value="Pendakian Puncak Tinggi (Hiking)" className="bg-emerald-950">Pendakian Puncak Tinggi (Hiking)</option>
+                  <option value="Survival Danau & Sungai" className="bg-emerald-950">Survival Danau & Sungai</option>
+                  <option value="Island Trekking & Snorkeling" className="bg-emerald-950">Island Trekking & Snorkeling</option>
                 </select>
               </div>
 
@@ -71,6 +71,7 @@ const AIPlanner: React.FC = () => {
                   {(['Backpacker', 'Standard', 'Luxury'] as const).map((b) => (
                     <button
                       key={b}
+                      type="button"
                       onClick={() => setBudget(b)}
                       className={`py-3 text-[9px] font-black uppercase tracking-widest rounded-xl border-2 transition-all active:scale-95 ${
                         budget === b 
@@ -87,6 +88,7 @@ const AIPlanner: React.FC = () => {
               {error && <p className="text-red-400 text-xs font-bold bg-red-500/10 p-4 rounded-xl border border-red-500/20">{error}</p>}
 
               <button 
+                type="button"
                 onClick={handleGenerate}
                 disabled={loading}
                 className="w-full bg-white hover:bg-emerald-400 hover:text-emerald-950 text-emerald-950 py-5 rounded-2xl font-black uppercase tracking-widest transition-all flex items-center justify-center space-x-3 disabled:opacity-50 active:scale-95 shadow-2xl"
@@ -137,30 +139,6 @@ const AIPlanner: React.FC = () => {
                       </div>
                     </div>
                   ))}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-16 pt-10 border-t-2 border-emerald-50">
-                  <div>
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-300 mb-6">Must-Carry Gear</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {result.essentials.map((item, idx) => (
-                        <span key={idx} className="bg-emerald-100 text-emerald-900 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-wider border border-emerald-200">
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-300 mb-6">Eco-Ethical Guide</h4>
-                    <ul className="space-y-3">
-                      {result.ecoTips.map((tip, idx) => (
-                        <li key={idx} className="flex items-start gap-3 text-xs font-bold text-emerald-800/70">
-                          <span className="text-emerald-400 font-black">✓</span>
-                          {tip}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
                 </div>
               </div>
             ) : (
