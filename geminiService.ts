@@ -1,12 +1,13 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { ItineraryRequest, ItineraryResponse } from "../types.ts";
+import { ItineraryRequest, ItineraryResponse } from "../types";
 
 export const generateItinerary = async (params: ItineraryRequest): Promise<ItineraryResponse> => {
-  const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
+  // @ts-ignore
+  const apiKey = process.env.API_KEY || '';
   
-  if (!apiKey || apiKey === '') {
-    throw new Error("Kunci API belum dikonfigurasi. Harap periksa pengaturan lingkungan Anda.");
+  if (!apiKey) {
+    throw new Error("Kunci API belum dikonfigurasi di Vercel Settings.");
   }
 
   const ai = new GoogleGenAI({ apiKey: apiKey });
@@ -18,12 +19,6 @@ export const generateItinerary = async (params: ItineraryRequest): Promise<Itine
   - Fokus: ${params.interest}
   - Durasi: ${params.duration} hari
   - Gaya: ${params.budget}
-  
-  Instruksi Khusus:
-  1. Sertakan detail trekking (pagi/siang/malam).
-  2. Tambahkan "ecoTips" tentang cara menjaga kelestarian hutan Papua.
-  3. Untuk peralatan (essentials), fokus pada gear teknis.
-  4. Berikan saran interaksi dengan masyarakat adat yang etis.
   
   Output harus dalam Bahasa Indonesia yang menginspirasi jiwa petualang.`;
 
