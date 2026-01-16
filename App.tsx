@@ -19,7 +19,6 @@ const App: React.FC = () => {
     <div className="min-h-screen">
       <Navbar />
 
-      {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 hero-vignette"></div>
         <div className="relative z-10 text-center px-8 reveal">
@@ -47,7 +46,6 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* Explore Section */}
       <section id="explore" className="py-32 px-8 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8 reveal">
           <div className="max-w-xl">
@@ -83,10 +81,8 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* AI Planner Section */}
       <AIPlanner />
 
-      {/* Footer */}
       <footer className="bg-white py-20 border-t border-emerald-50">
         <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-12">
           <div className="text-center md:text-left">
@@ -101,7 +97,6 @@ const App: React.FC = () => {
         </div>
       </footer>
 
-      {/* Detail Modal */}
       {selectedDest && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-emerald-950/40 backdrop-blur-xl" onClick={() => setSelectedDest(null)}></div>

@@ -1,5 +1,7 @@
 {
-  "name": "JelajahPapua",
-  "description": "Travel Papua Terlengkap",
-  "requestFramePermissions": ["geolocation"]
+  "name": "JelajahPapua - Teman Petualanganmu di Tanah Papua",
+  "description": "Platform travel terlengkap untuk eksplorasi Papua: dari backpacking pulau, trekking Pegunungan Cycloop, kemah tepi danau, hingga pengamatan burung ikonik.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
 }

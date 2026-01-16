@@ -1,28 +1,31 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { ItineraryRequest, ItineraryResponse } from "../types";
+import { ItineraryRequest, ItineraryResponse } from "../types.ts";
 
 export const generateItinerary = async (params: ItineraryRequest): Promise<ItineraryResponse> => {
-  const apiKey = process.env.API_KEY;
+  const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
   
   if (!apiKey || apiKey === '') {
-    throw new Error("Kunci API (API_KEY) belum terpasang. Jika Anda pemilik website, silakan atur API_KEY di pengaturan hosting Anda.");
+    throw new Error("Kunci API belum dikonfigurasi. Harap periksa pengaturan lingkungan Anda.");
   }
 
   const ai = new GoogleGenAI({ apiKey: apiKey });
   
-  const prompt = `Buatkan rencana perjalanan (itinerary) detail untuk liburan ke Papua dengan nama layanan "JelajahPapua".
-  Fokus perjalanan: ${params.interest}. 
-  Durasi: ${params.duration} hari. 
-  Gaya perjalanan: ${params.budget}. 
+  const prompt = `Anda adalah ahli petualangan alam liar (wilderness guide) khusus Papua untuk layanan "JelajahPapua".
+  Buatkan rencana perjalanan (itinerary) yang SANGAT FOKUS PADA EKSPLORASI ALAM dan KONSERVASI.
   
-  Pastikan mencakup destinasi yang relevan seperti:
-  - Jelajah Danau Sentani (Desa Adat, Kuliner Papeda)
-  - Trekking Pegunungan Cycloop (Air terjun, camping hutan)
-  - Birdwatching Cendrawasih
-  - Island Hopping gaya backpacker (Homestay lokal)
+  Parameter:
+  - Fokus: ${params.interest}
+  - Durasi: ${params.duration} hari
+  - Gaya: ${params.budget}
   
-  Berikan tips praktis untuk budget ${params.budget} dan peralatan wajib. Output harus ramah, menginspirasi, dan informatif.`;
+  Instruksi Khusus:
+  1. Sertakan detail trekking (pagi/siang/malam).
+  2. Tambahkan "ecoTips" tentang cara menjaga kelestarian hutan Papua.
+  3. Untuk peralatan (essentials), fokus pada gear teknis.
+  4. Berikan saran interaksi dengan masyarakat adat yang etis.
+  
+  Output harus dalam Bahasa Indonesia yang menginspirasi jiwa petualang.`;
 
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
@@ -49,9 +52,13 @@ export const generateItinerary = async (params: ItineraryRequest): Promise<Itine
           essentials: {
             type: Type.ARRAY,
             items: { type: Type.STRING }
+          },
+          ecoTips: {
+            type: Type.ARRAY,
+            items: { type: Type.STRING }
           }
         },
-        required: ["title", "summary", "dailyPlan", "essentials"]
+        required: ["title", "summary", "dailyPlan", "essentials", "ecoTips"]
       }
     }
   });
@@ -62,6 +69,6 @@ export const generateItinerary = async (params: ItineraryRequest): Promise<Itine
     return JSON.parse(text.trim());
   } catch (error) {
     console.error("Failed to parse AI response:", error);
-    throw new Error("Gagal menyusun jadwal. Silakan coba lagi dalam beberapa saat.");
+    throw new Error("Gagal menyusun jadwal alam. Silakan coba lagi.");
   }
 };
