@@ -1,0 +1,5 @@
+{
+  "name": "JelajahPapua",
+  "description": "Travel Papua Terlengkap",
+  "requestFramePermissions": ["geolocation"]
+}
