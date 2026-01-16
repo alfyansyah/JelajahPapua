@@ -83,6 +83,34 @@ const App: React.FC = () => {
 
       <AIPlanner />
 
+      {/* Bagian Panduan Baru */}
+      <section id="tips" className="py-32 bg-white px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20 reveal">
+            <span className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-4 block">Essential Knowledge</span>
+            <h2 className="text-5xl font-black text-emerald-950 tracking-tighter">Panduan Penjelajah</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="reveal" style={{ animationDelay: '0.1s' }}>
+              <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-700 mb-6 font-bold">01</div>
+              <h4 className="text-xl font-black text-emerald-950 mb-4">Kesehatan & Keamanan</h4>
+              <p className="text-emerald-900/60 leading-relaxed">Gunakan profilaksis malaria (Malarone/Doxycycline) jika masuk ke pedalaman. Selalu gunakan pemandu lokal bersertifikat untuk trekking hutan primer.</p>
+            </div>
+            <div className="reveal" style={{ animationDelay: '0.2s' }}>
+              <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-700 mb-6 font-bold">02</div>
+              <h4 className="text-xl font-black text-emerald-950 mb-4">Etika Budaya</h4>
+              <p className="text-emerald-900/60 leading-relaxed">Hargai tanah adat. Selalu minta izin (permisi) sebelum memotret orang atau memasuki area sakral. Sapaan "Amolongo" atau "Kinaonak" akan sangat dihargai.</p>
+            </div>
+            <div className="reveal" style={{ animationDelay: '0.3s' }}>
+              <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-700 mb-6 font-bold">03</div>
+              <h4 className="text-xl font-black text-emerald-950 mb-4">Leave No Trace</h4>
+              <p className="text-emerald-900/60 leading-relaxed">Papua adalah benteng terakhir biodiversitas. Bawa kembali sampah plastik Anda ke kota. Jangan memberi makan satwa liar agar insting mereka tetap terjaga.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <footer className="bg-white py-20 border-t border-emerald-50">
         <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-12">
           <div className="text-center md:text-left">
